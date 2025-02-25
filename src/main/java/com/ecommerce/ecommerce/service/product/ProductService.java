@@ -1,15 +1,26 @@
 package com.ecommerce.ecommerce.service.product;
 
 import com.ecommerce.ecommerce.model.Product;
+import com.ecommerce.ecommerce.request.AddProductRequest;
+import com.ecommerce.ecommerce.request.ProductUpdateRequest;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.ecommerce.ecommerce.model.Category;
+import com.ecommerce.ecommerce.CategoryRepository.CategoryRepository;
 import com.ecommerce.ecommerce.ProductRepository.ProductRepository;
 import com.ecommerce.ecommerce.exception.ProductNotFoundException;
 
 public class ProductService implements IProductService {
   private ProductRepository productRepository;
+  private CategoryRepository categoryRepository;
   
+  @Override
+  public List<Product>getProductsByBrandAndName(String category, String name){
+    return productRepository.findByBrandAndName(category,name);
+  }
+
   @Override
   public List<Product> getAllProducts(){
     return productRepository.findAll();
@@ -40,5 +51,64 @@ public class ProductService implements IProductService {
   @Override
   public List<Product> getProductsByCategory(String category){
     return productRepository.findByCategoryName(category);
+  }
+
+  @Override
+  public Product addProduct(AddProductRequest request) {
+    //check if category is found
+    //if yes, set it as a new product
+    //if no, then save it as a new category
+    Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+            .orElseGet(()->{
+              Category newCategory = new Category(request.getCategory().getName());
+              return categoryRepository.save(newCategory);
+            });
+    request.setCategory(category);
+    return productRepository.save(CreateProduct(request,category));
+  }
+
+  private Product CreateProduct(AddProductRequest request, Category category){
+
+    return new Product(
+      request.getName(),
+      request.getBrand(),
+      request.getPrice(),
+      request.getInventory(),
+      request.getDescription(),
+      category
+      );
+  }
+
+  private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request){
+    existingProduct.setName(request.getName());
+    existingProduct.setBrand(request.getBrand());
+    existingProduct.setPrice(request.getPrice());
+    existingProduct.setInventory(request.getInventory());
+    existingProduct.setDescription(request.getDescription());
+
+    Category category = categoryRepository.findByName(request.getCategory().getName());
+
+    existingProduct.setCategory(category);
+    return existingProduct;
+   
+  }
+
+  @Override
+  public Product updateProductById(ProductUpdateRequest request, Long productId) {
+    
+    return productRepository.findById(productId)
+           .map(existingProduct->updateExistingProduct(existingProduct, request))
+           .map(productRepository::save)
+           .orElseThrow(()->new ProductNotFoundException("product not found"));
+  }
+  
+  @Override
+  public List<Product> getProductsByName(String name) {
+   return productRepository.findByName(name);
+  }
+
+  @Override
+  public Long countProductsByBrandAndName(String brand, String name) {
+    return countProductsByBrandAndName(brand,name);
   }
 }

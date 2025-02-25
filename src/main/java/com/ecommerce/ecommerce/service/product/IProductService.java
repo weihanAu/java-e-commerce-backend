@@ -2,12 +2,14 @@ package com.ecommerce.ecommerce.service.product;
 import java.util.List;
 
 import com.ecommerce.ecommerce.model.Product;
+import com.ecommerce.ecommerce.request.AddProductRequest;
+import com.ecommerce.ecommerce.request.ProductUpdateRequest;
 
 public interface IProductService {
-  Product addProdict(Product product);
+  Product addProduct(AddProductRequest product);
   Product getProductById(Long id);
   void deleteProductById(Long id);
-  void updateProductById(Product product,Long productId);
+  Product updateProductById(ProductUpdateRequest request,Long productId);
   List<Product> getAllProducts();
   List<Product> getProductsByCategory(String category);
   List<Product> getProductsByBrand(String brand);
