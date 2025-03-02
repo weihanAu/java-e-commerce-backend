@@ -4,17 +4,23 @@ import com.ecommerce.ecommerce.model.Product;
 import com.ecommerce.ecommerce.request.AddProductRequest;
 import com.ecommerce.ecommerce.request.ProductUpdateRequest;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
 
 import com.ecommerce.ecommerce.model.Category;
 import com.ecommerce.ecommerce.CategoryRepository.CategoryRepository;
 import com.ecommerce.ecommerce.ProductRepository.ProductRepository;
 import com.ecommerce.ecommerce.exception.ProductNotFoundException;
 
+@Service
+@RequiredArgsConstructor
 public class ProductService implements IProductService {
-  private ProductRepository productRepository;
-  private CategoryRepository categoryRepository;
+  private final ProductRepository productRepository;
+  private final CategoryRepository categoryRepository;
   
   @Override
   public List<Product>getProductsByBrandAndName(String category, String name){
