@@ -1,5 +1,5 @@
 package com.ecommerce.ecommerce.controller;
 
-public class ProductControllers {
+public class ProductController {
 
 }
