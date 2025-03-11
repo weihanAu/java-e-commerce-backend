@@ -29,7 +29,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
-
+    
     public Product(String name, String brand, BigDecimal price, int inventory, String description, Category category) {
         this.name = name;
         this.brand = brand;

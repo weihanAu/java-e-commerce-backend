@@ -3,11 +3,17 @@ package com.ecommerce.ecommerce.service.category;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.ecommerce.ecommerce.CategoryRepository.CategoryRepository;
 import com.ecommerce.ecommerce.exception.AlreadyExistException;
 import com.ecommerce.ecommerce.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerce.model.Category;
 
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
   
   private CategoryRepository categoryRepository;
