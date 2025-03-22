@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import org.springframework.data.annotation.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,8 +36,9 @@ public class CartItem {
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "cart_id")
+  @JsonIgnore
   private Cart cart;
-
+  
   public void setTotalPrice(){
     this.totalPrice = this.unitPrice.multiply(new BigDecimal(this.quantity));
   }
