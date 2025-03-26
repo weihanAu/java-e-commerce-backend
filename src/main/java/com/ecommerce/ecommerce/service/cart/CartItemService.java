@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.service.cart;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class CartItemService implements ICartItemService {
   private final CartResponsitory cartResponsitory;
   private final CartService cartService;
   private final ProductService productService;
-
+  
   @Override
   public void addItemToCart(Long cartId, Long ProductId, int quantity) {
     //1. get the cart
@@ -32,6 +33,11 @@ public class CartItemService implements ICartItemService {
     //5. if no,  then then initiate a new cartItem entry.
     Cart cart = cartService.getCart(cartId);
     Product product = productService.getProductById(ProductId);
+
+     // Ensure cart's items list is never null (initialize if null)
+      if (cart.getItems() == null) {
+          cart.setItems(new HashSet<>());
+      }
     CartItem cartItem = cart.getItems()
                 .stream()
                 .filter(item->item.getProduct().getId().equals(ProductId))
@@ -73,7 +79,10 @@ public class CartItemService implements ICartItemService {
           item.setTotalPrice();
         });
         
-        BigDecimal totalAmount = cart.getTotalAmount();
+        BigDecimal totalAmount = cart.getItems()
+                                    .stream()
+                                    .map(CartItem::getTotalPrice)
+                                    .reduce(BigDecimal.ZERO,BigDecimal::add);
         cart.setTotalAmount(totalAmount);
         cartResponsitory.save(cart);              
   }

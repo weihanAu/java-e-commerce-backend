@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.service.cart;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 public class CartService implements ICartService {
   private final CartResponsitory cartResponsitory;
   private final CartItemResponsitory cartItemResponsitory;
+  private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
   @Override
   public Cart getCart(Long id) {
@@ -39,5 +41,13 @@ public class CartService implements ICartService {
     return cart.getTotalAmount();
   }
 
+  @Override
+  public Long initializeNewCart(){
+    Cart newCart = new Cart();
+    // Long newCartId = cartIdGenerator.incrementAndGet();
+
+    // newCart.setId(newCartId);
+    return cartResponsitory.save(newCart).getId();
+  }
  
 }

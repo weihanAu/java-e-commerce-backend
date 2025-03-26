@@ -1,27 +1,21 @@
 package com.ecommerce.ecommerce.model;
 
-import java.math.BigDecimal;
-import java.util.Set;
-
-import org.springframework.data.annotation.Id;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cart {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
