@@ -10,6 +10,7 @@ import com.ecommerce.ecommerce.model.Cart;
 import com.ecommerce.ecommerce.responsitory.Cart.CartItemResponsitory;
 import com.ecommerce.ecommerce.responsitory.Cart.CartResponsitory;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -27,6 +28,7 @@ public class CartService implements ICartService {
     return cartResponsitory.save(cart);
   }
 
+  @Transactional
   @Override
   public void clearCart(Long id) {
     Cart cart = getCart(id);
