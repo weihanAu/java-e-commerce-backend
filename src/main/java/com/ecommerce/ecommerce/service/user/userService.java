@@ -2,6 +2,7 @@ package com.ecommerce.ecommerce.service.user;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.ecommerce.dto.UserDto;
@@ -16,8 +17,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class userService implements IUserService {
+public class UserService implements IUserService {
   private final UserRespisitory userRespisitory;
+  private final ModelMapper modelMapper;
 
   @Override
   public User getUserById(Long userId) {
@@ -57,8 +59,7 @@ public class userService implements IUserService {
 
   @Override
   public UserDto convertUserToDto(User user) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'convertUserToDto'");
+    return modelMapper.map(user,UserDto.class);
   }
 
 }

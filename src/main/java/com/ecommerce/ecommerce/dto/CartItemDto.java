@@ -10,4 +10,4 @@ public class CartItemDto {
     private Integer quantity;
     private BigDecimal unitPrice;
     private ProductDto product;
-}
+}  
