@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.ecommerce.exception.ResourceNotFoundException;
+import com.ecommerce.ecommerce.model.Cart;
+import com.ecommerce.ecommerce.model.User;
 import com.ecommerce.ecommerce.response.ApiResponse;
-import com.ecommerce.ecommerce.service.cart.CartItemService;
-import com.ecommerce.ecommerce.service.cart.CartService;
+import com.ecommerce.ecommerce.service.cart.ICartItemService;
+import com.ecommerce.ecommerce.service.cart.ICartService;
+import com.ecommerce.ecommerce.service.user.IUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,18 +26,18 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("${api.prefix}/cartItems")
 public class CartItemController {
-  private final CartItemService cartItemService;
-  private final CartService cartService;
+  private final ICartItemService cartItemService;
+  private final ICartService cartService;
+  private final IUserService userService;
 
   @PostMapping("/item/add")
-  public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId, 
+  public ResponseEntity<ApiResponse> addItemToCart(
                                                    @RequestParam Long productId,
                                                    @RequestParam Integer quantity){
        try {
-         if(cartId==null || cartId < 0){
-          cartId = cartService.initializeNewCart();
-         }
-         cartItemService.addItemToCart(cartId,productId,quantity);
+          User user = userService.getAuthenticatedUser();
+         Cart cart = cartService.initializeNewCart(user);
+         cartItemService.addItemToCart(cart.getId(),productId,quantity);
          return ResponseEntity.ok(new ApiResponse("success", null));
        } catch (ResourceNotFoundException e) {
          return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), NOT_FOUND));

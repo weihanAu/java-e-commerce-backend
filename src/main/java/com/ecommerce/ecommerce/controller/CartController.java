@@ -7,17 +7,14 @@ import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.math.BigDecimal;
 
-import static org.springframework.http.HttpStatus.CONFLICT;
-
 import com.ecommerce.ecommerce.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerce.model.Cart;
 import com.ecommerce.ecommerce.response.ApiResponse;
-import com.ecommerce.ecommerce.service.cart.CartService;
+import com.ecommerce.ecommerce.service.cart.ICartService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("${api.prefix}/carts")
 public class CartController {
-  private final CartService cartService;
+  private final ICartService cartService;
 
   @GetMapping("/{cartId}/my-cart")
   public ResponseEntity<ApiResponse> getCart(@PathVariable Long cartId){

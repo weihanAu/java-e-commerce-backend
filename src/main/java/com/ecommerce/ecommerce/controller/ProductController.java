@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.ecommerce.dto.ProductDto;
+import com.ecommerce.ecommerce.exception.AlreadyExistException;
 import com.ecommerce.ecommerce.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerce.model.Product;
 import com.ecommerce.ecommerce.request.AddProductRequest;
@@ -34,8 +35,8 @@ public class ProductController {
       List<Product> products = productService.getAllProducts();
       List<ProductDto> productDtos = productService.getConvertedProducts(products);
       return ResponseEntity.ok(new ApiResponse("found", productDtos));
-    } catch (Exception e) {
-      return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), INTERNAL_SERVER_ERROR));
+    } catch (AlreadyExistException e) {
+      return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
     }
   }
 

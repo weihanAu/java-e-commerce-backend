@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ecommerce.ecommerce.dto.OrderDto;
 import com.ecommerce.ecommerce.model.Order;
 import com.ecommerce.ecommerce.response.ApiResponse;
-import com.ecommerce.ecommerce.service.order.OrderService;
+import com.ecommerce.ecommerce.service.order.IOrderService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,13 +25,14 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("${api.prefix}/orders")
 public class OrderController {
-  private final OrderService orderService;
+  private final IOrderService orderService;
 
   @PostMapping("/order")
   public ResponseEntity<ApiResponse> createOrder(@RequestParam Long userId){
     try {
       Order order = orderService.placeOrder(userId);
-      return ResponseEntity.ok(new ApiResponse("item order success!", order));
+      OrderDto orderDto = orderService.convertOrderDto(order);
+      return ResponseEntity.ok(new ApiResponse("item order success!", orderDto));
     } catch (Exception e) {
       return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(),INTERNAL_SERVER_ERROR));
     }
@@ -56,4 +58,5 @@ public class OrderController {
       return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(),NOT_FOUND));
     }
   }
+
 }

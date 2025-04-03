@@ -92,6 +92,10 @@ public class OrderService implements IOrderService {
           .multiply(new BigDecimal(item.getQuantity())))
           .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
-
+ 
+  @Override
+  public OrderDto convertOrderDto(Order order){
+    return modelMapper.map(order,OrderDto.class);
+  }
 
 }

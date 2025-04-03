@@ -12,6 +12,7 @@ import com.ecommerce.ecommerce.model.Product;
 import com.ecommerce.ecommerce.responsitory.Cart.CartItemResponsitory;
 import com.ecommerce.ecommerce.responsitory.Cart.CartResponsitory;
 import com.ecommerce.ecommerce.service.product.ProductService;
+import com.ecommerce.ecommerce.service.user.IUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,7 @@ public class CartItemService implements ICartItemService {
   private final CartResponsitory cartResponsitory;
   private final CartService cartService;
   private final ProductService productService;
+  
   
   @Override
   public void addItemToCart(Long cartId, Long ProductId, int quantity) {

@@ -20,6 +20,7 @@ import com.ecommerce.ecommerce.CategoryRepository.CategoryRepository;
 import com.ecommerce.ecommerce.ProductRepository.ProductRepository;
 import com.ecommerce.ecommerce.dto.ImageDto;
 import com.ecommerce.ecommerce.dto.ProductDto;
+import com.ecommerce.ecommerce.exception.AlreadyExistException;
 import com.ecommerce.ecommerce.exception.ProductNotFoundException;
 
 @Service
@@ -72,6 +73,10 @@ public class ProductService implements IProductService {
     //check if category is found
     //if yes, set it as a new product
     //if no, then save it as a new category
+
+    if(productExist(request.getName(),request.getBrand())){
+      throw new AlreadyExistException( request.getBrand()+request.getName()+"already exists,you can update the quantity");
+    }
     Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
             .orElseGet(()->{
               Category newCategory = new Category(request.getCategory().getName());
@@ -144,4 +149,7 @@ public class ProductService implements IProductService {
     return productDto;
   }
 
+  private boolean productExist(String name, String brand){
+    return productRepository.existsByNameAndBrand(name,brand);
+  }
 }

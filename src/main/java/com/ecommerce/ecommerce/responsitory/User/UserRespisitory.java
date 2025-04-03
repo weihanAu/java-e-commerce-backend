@@ -6,4 +6,5 @@ import com.ecommerce.ecommerce.model.User;
 
 public interface UserRespisitory extends JpaRepository<User,Long> {
   boolean existsByEmail(String Email);
+  User findByEmail(String email);
 }

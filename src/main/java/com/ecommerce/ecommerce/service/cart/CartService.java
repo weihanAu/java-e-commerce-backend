@@ -1,14 +1,17 @@
 package com.ecommerce.ecommerce.service.cart;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.ecommerce.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerce.model.Cart;
+import com.ecommerce.ecommerce.model.User;
 import com.ecommerce.ecommerce.responsitory.Cart.CartItemResponsitory;
 import com.ecommerce.ecommerce.responsitory.Cart.CartResponsitory;
+import com.ecommerce.ecommerce.service.user.IUserService;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -18,7 +21,7 @@ import lombok.AllArgsConstructor;
 public class CartService implements ICartService {
   private final CartResponsitory cartResponsitory;
   private final CartItemResponsitory cartItemResponsitory;
-  private final AtomicLong cartIdGenerator = new AtomicLong(0);
+  private final IUserService userService;
 
   @Override
   public Cart getCart(Long id) {
@@ -49,12 +52,13 @@ public class CartService implements ICartService {
   }
 
   @Override
-  public Long initializeNewCart(){
-    Cart newCart = new Cart();
-    // Long newCartId = cartIdGenerator.incrementAndGet();
-
-    // newCart.setId(newCartId);
-    return cartResponsitory.save(newCart).getId();
+  public Cart initializeNewCart(User user){
+   return Optional.ofNullable(getCartByUserId(user.getId()))
+    .orElseGet(()->{
+                Cart cart = new Cart();
+                cart.setUser(user);
+                return cartResponsitory.save(cart);
+   });
   }
  
 }
