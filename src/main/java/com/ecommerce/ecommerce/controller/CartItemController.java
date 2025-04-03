@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.controller;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import com.ecommerce.ecommerce.service.cart.ICartItemService;
 import com.ecommerce.ecommerce.service.cart.ICartService;
 import com.ecommerce.ecommerce.service.user.IUserService;
 
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -41,6 +43,8 @@ public class CartItemController {
          return ResponseEntity.ok(new ApiResponse("success", null));
        } catch (ResourceNotFoundException e) {
          return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), NOT_FOUND));
+       }catch(JwtException e){
+        return ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
        }
   }
   @DeleteMapping("/{cartId}/item/{productId}/remove")

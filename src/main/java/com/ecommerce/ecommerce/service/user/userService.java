@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.ecommerce.dto.UserDto;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements IUserService {
   private final UserRespisitory userRespisitory;
   private final ModelMapper modelMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public User getUserById(Long userId) {
@@ -36,7 +38,7 @@ public class UserService implements IUserService {
             .map(req -> {
               User newUser = new User();
               newUser.setEmail(req.getEmail());
-              newUser.setPassword(req.getPassword());
+              newUser.setPassword(passwordEncoder.encode(request.getPassword()));
               newUser.setFirstName(req.getFirstName());
               newUser.setLastName(req.getLastName());
               return userRespisitory.save(newUser);
